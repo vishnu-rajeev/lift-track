@@ -1,0 +1,7 @@
+CREATE TABLE exercises
+(
+    id           BIGSERIAL PRIMARY KEY,
+    name         VARCHAR(100) NOT NULL UNIQUE,
+    muscle_group VARCHAR(50)  NOT NULL,
+    created_at   TIMESTAMPTZ  NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
