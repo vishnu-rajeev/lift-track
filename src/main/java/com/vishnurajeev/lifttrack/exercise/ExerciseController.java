@@ -1,5 +1,6 @@
 package com.vishnurajeev.lifttrack.exercise;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class ExerciseController {
     }
 
     @PostMapping
-    public ResponseEntity<Exercise> createExercise(@RequestBody CreateExerciseRequest request) {
+    public ResponseEntity<Exercise> createExercise(@Valid @RequestBody CreateExerciseRequest request) {
         Exercise createdExercise = exerciseService.createExercise(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdExercise);
     }
