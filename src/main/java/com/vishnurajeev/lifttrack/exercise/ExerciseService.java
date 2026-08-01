@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -34,5 +35,13 @@ public class ExerciseService {
 
     public List<Exercise> getAllExercises() {
         return exerciseRepository.findAll();
+    }
+
+    public Exercise getExerciseById(Long id) {
+        Optional<Exercise> exerciseOptional = exerciseRepository.findById(id);
+        if(exerciseOptional.isEmpty()) {
+            throw new ExerciseNotFoundException(id);
+        }
+        return exerciseOptional.get();
     }
 }

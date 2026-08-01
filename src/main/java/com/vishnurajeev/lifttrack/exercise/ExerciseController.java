@@ -27,4 +27,9 @@ public class ExerciseController {
     public List<Exercise> getAllExercises() {
         return exerciseService.getAllExercises();
     }
+
+    @GetMapping("/{id}")
+    public Exercise getExerciseById(@PathVariable Long id) {
+        return exerciseService.getExerciseById(id);
+    }
 }

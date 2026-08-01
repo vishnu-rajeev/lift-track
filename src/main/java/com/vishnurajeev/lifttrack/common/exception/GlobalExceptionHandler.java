@@ -1,6 +1,7 @@
 package com.vishnurajeev.lifttrack.common.exception;
 
 import com.vishnurajeev.lifttrack.exercise.DuplicateExerciseException;
+import com.vishnurajeev.lifttrack.exercise.ExerciseNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -38,5 +39,14 @@ public class GlobalExceptionHandler {
         responseBody.put("message", exception.getMessage());
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(responseBody);
+    }
+
+    @ExceptionHandler(ExerciseNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleExerciseNotFound(ExerciseNotFoundException exception) {
+        Map<String, Object> responseBody = new LinkedHashMap<>();
+        responseBody.put("status", HttpStatus.NOT_FOUND.value());
+        responseBody.put("message", exception.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
     }
 }
