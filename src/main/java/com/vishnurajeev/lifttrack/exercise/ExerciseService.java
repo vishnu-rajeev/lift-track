@@ -17,9 +17,16 @@ public class ExerciseService {
 
     @Transactional
     public Exercise createExercise(CreateExerciseRequest request) {
+        String name = request.name().trim();
+        String muscleGroup = request.muscleGroup().trim();
+
+        if(exerciseRepository.existsByNameIgnoreCase(name)) {
+            throw new DuplicateExerciseException(name);
+        }
+
         Exercise exercise = new Exercise(
-                request.name(),
-                request.muscleGroup()
+                name,
+                muscleGroup
         );
 
         return exerciseRepository.save(exercise);

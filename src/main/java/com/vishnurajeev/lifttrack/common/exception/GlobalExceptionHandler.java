@@ -1,5 +1,6 @@
 package com.vishnurajeev.lifttrack.common.exception;
 
+import com.vishnurajeev.lifttrack.exercise.DuplicateExerciseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -28,5 +29,14 @@ public class GlobalExceptionHandler {
         responseBody.put("errors", errors);
 
         return ResponseEntity.badRequest().body(responseBody);
+    }
+
+    @ExceptionHandler(DuplicateExerciseException.class)
+    public ResponseEntity<Map<String, Object>> handleDuplicateExercise(DuplicateExerciseException exception) {
+        Map<String, Object> responseBody = new LinkedHashMap<>();
+        responseBody.put("status", HttpStatus.CONFLICT.value());
+        responseBody.put("message", exception.getMessage());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(responseBody);
     }
 }
