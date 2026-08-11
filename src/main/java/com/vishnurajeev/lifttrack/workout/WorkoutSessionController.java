@@ -1,19 +1,20 @@
 package com.vishnurajeev.lifttrack.workout;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/workouts")
 public class WorkoutSessionController {
 
     private final WorkoutSessionService workoutSessionService;
+    private final WorkoutExerciseService workoutExerciseService;
 
-    public WorkoutSessionController(WorkoutSessionService workoutSessionService) {
+    public WorkoutSessionController(WorkoutSessionService workoutSessionService, WorkoutExerciseService workoutExerciseService) {
         this.workoutSessionService = workoutSessionService;
+        this.workoutExerciseService = workoutExerciseService;
     }
 
     @PostMapping
@@ -21,5 +22,12 @@ public class WorkoutSessionController {
         WorkoutSession workoutSession = workoutSessionService.startWorkout();
 
         return ResponseEntity.status(HttpStatus.CREATED).body(workoutSession);
+    }
+
+    @PostMapping("/{workoutId}/exercises")
+    public ResponseEntity<WorkoutExercise> addExerciseToWorkout(@PathVariable Long workoutId,
+                                                                @Valid @RequestBody AddExerciseToWorkoutRequest request) {
+        WorkoutExercise workoutExercise = workoutExerciseService.addExerciseToWorkout(workoutId, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(workoutExercise);
     }
 }
