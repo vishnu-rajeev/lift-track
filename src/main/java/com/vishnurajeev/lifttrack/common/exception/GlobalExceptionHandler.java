@@ -2,7 +2,9 @@ package com.vishnurajeev.lifttrack.common.exception;
 
 import com.vishnurajeev.lifttrack.exercise.DuplicateExerciseException;
 import com.vishnurajeev.lifttrack.exercise.ExerciseNotFoundException;
+import com.vishnurajeev.lifttrack.workout.WorkoutExerciseNotFoundException;
 import com.vishnurajeev.lifttrack.workout.WorkoutSessionNotFoundException;
+import org.hibernate.jdbc.Work;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -53,6 +55,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(WorkoutSessionNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleWorkoutSessionNotFound(WorkoutSessionNotFoundException exception) {
+        Map<String, Object> responseBody = new LinkedHashMap<>();
+        responseBody.put("status", HttpStatus.NOT_FOUND.value());
+        responseBody.put("message", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+    }
+
+    @ExceptionHandler(WorkoutExerciseNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleWorkoutExerciseNotFound(WorkoutExerciseNotFoundException exception) {
         Map<String, Object> responseBody = new LinkedHashMap<>();
         responseBody.put("status", HttpStatus.NOT_FOUND.value());
         responseBody.put("message", exception.getMessage());
