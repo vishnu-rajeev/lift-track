@@ -21,4 +21,13 @@ public class WorkoutSessionService {
 
         return workoutSessionRepository.save(workoutSession);
     }
+
+    @Transactional
+    public WorkoutSession finishWorkout(Long workoutId) {
+        WorkoutSession workoutSession = workoutSessionRepository
+                                        .findById(workoutId)
+                                        .orElseThrow(() -> new WorkoutSessionNotFoundException(workoutId));
+        workoutSession.finish();
+        return workoutSession;
+    }
 }

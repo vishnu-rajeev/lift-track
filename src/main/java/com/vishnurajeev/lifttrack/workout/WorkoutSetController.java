@@ -16,9 +16,9 @@ public class WorkoutSetController {
     }
 
     @PostMapping("/{workoutExerciseId}/sets")
-    public ResponseEntity<WorkoutSet> addSet(@PathVariable Long workoutExerciseId,
+    public ResponseEntity<WorkoutSetResponse> addSet(@PathVariable Long workoutExerciseId,
                                              @Valid @RequestBody AddWorkoutSetRequest request) {
-        WorkoutSet workoutSet = workoutSetService.addSet(workoutExerciseId, request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(workoutSet);
+        WorkoutSetResponse response = workoutSetService.addSet(workoutExerciseId, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

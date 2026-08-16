@@ -36,4 +36,8 @@ public class WorkoutSession {
     public Instant getFinishedAt() {
         return finishedAt;
     }
+
+    public void finish() {
+        this.finishedAt = Instant.now();
+    }
 }

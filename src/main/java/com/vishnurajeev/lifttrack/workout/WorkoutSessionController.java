@@ -30,4 +30,10 @@ public class WorkoutSessionController {
         WorkoutExercise workoutExercise = workoutExerciseService.addExerciseToWorkout(workoutId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(workoutExercise);
     }
+
+    @PostMapping("/{workoutId}/finish")
+    public ResponseEntity<WorkoutSession> finishWorkout(@PathVariable Long workoutId) {
+        WorkoutSession workoutSession = workoutSessionService.finishWorkout(workoutId);
+        return ResponseEntity.ok(workoutSession);
+    }
 }

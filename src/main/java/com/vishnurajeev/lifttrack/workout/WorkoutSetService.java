@@ -16,7 +16,7 @@ public class WorkoutSetService {
     }
 
     @Transactional
-    public WorkoutSet addSet (Long workoutExerciseId, AddWorkoutSetRequest request) {
+    public WorkoutSetResponse addSet (Long workoutExerciseId, AddWorkoutSetRequest request) {
         WorkoutExercise workoutExercise = workoutExerciseRepository
                                             .findById(workoutExerciseId)
                                             .orElseThrow(() -> new WorkoutExerciseNotFoundException(workoutExerciseId));
@@ -28,6 +28,14 @@ public class WorkoutSetService {
                 request.reps()
         );
 
-        return workoutSetRepository.save(workoutSet);
+        WorkoutSet savedWorkoutSet = workoutSetRepository.save(workoutSet);
+
+        return new WorkoutSetResponse(
+                workoutSet.getId(),
+                workoutExercise.getId(),
+                savedWorkoutSet.getSetNumber(),
+                savedWorkoutSet.getWeightKg(),
+                workoutSet.getReps()
+        );
     }
 }
