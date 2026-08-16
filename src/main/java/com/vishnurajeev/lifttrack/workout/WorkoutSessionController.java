@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/workouts")
 public class WorkoutSessionController {
@@ -35,5 +37,10 @@ public class WorkoutSessionController {
     public ResponseEntity<WorkoutSession> finishWorkout(@PathVariable Long workoutId) {
         WorkoutSession workoutSession = workoutSessionService.finishWorkout(workoutId);
         return ResponseEntity.ok(workoutSession);
+    }
+
+    @GetMapping
+    public List<WorkoutSessionResponse> getWorkoutHistory() {
+        return workoutSessionService.getWorkoutHistory();
     }
 }

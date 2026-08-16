@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -29,5 +30,18 @@ public class WorkoutSessionService {
                                         .orElseThrow(() -> new WorkoutSessionNotFoundException(workoutId));
         workoutSession.finish();
         return workoutSession;
+    }
+
+    public List<WorkoutSessionResponse> getWorkoutHistory() {
+        return workoutSessionRepository
+                .findByFinishedAtIsNotNullOrderByStartedAtDesc()
+                .stream()
+                .map(workoutSession -> new WorkoutSessionResponse(
+                        workoutSession.getId(),
+                        workoutSession.getStartedAt(),
+                        workoutSession.getFinishedAt()
+                ))
+                .toList();
+
     }
 }
