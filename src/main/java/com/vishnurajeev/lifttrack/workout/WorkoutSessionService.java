@@ -11,9 +11,15 @@ import java.util.List;
 public class WorkoutSessionService {
 
     private final WorkoutSessionRepository workoutSessionRepository;
+    private final WorkoutExerciseRepository workoutExerciseRepository;
+    private final WorkoutSetRepository workoutSetRepository;
 
-    public WorkoutSessionService(WorkoutSessionRepository workoutSessionRepository) {
+    public WorkoutSessionService(WorkoutSessionRepository workoutSessionRepository,
+                                 WorkoutExerciseRepository workoutExerciseRepository,
+                                 WorkoutSetRepository workoutSetRepository) {
         this.workoutSessionRepository = workoutSessionRepository;
+        this.workoutExerciseRepository = workoutExerciseRepository;
+        this.workoutSetRepository = workoutSetRepository;
     }
 
     @Transactional
@@ -36,12 +42,42 @@ public class WorkoutSessionService {
         return workoutSessionRepository
                 .findByFinishedAtIsNotNullOrderByStartedAtDesc()
                 .stream()
-                .map(workoutSession -> new WorkoutSessionResponse(
-                        workoutSession.getId(),
-                        workoutSession.getStartedAt(),
-                        workoutSession.getFinishedAt()
+                .map(this::toWorkoutSessionResponse)
+                .toList();
+
+    }
+
+    private WorkoutSessionResponse toWorkoutSessionResponse(WorkoutSession workoutSession) {
+        List<WorkoutExerciseHistoryResponse> exercises = workoutExerciseRepository
+                .findByWorkoutSessionIdOrderByPositionAsc(workoutSession.getId())
+                .stream()
+                .map(this::toWorkoutExerciseHistoryResponse)
+                .toList();
+
+        return new WorkoutSessionResponse(
+                workoutSession.getId(),
+                workoutSession.getStartedAt(),
+                workoutSession.getFinishedAt(),
+                exercises
+        );
+    }
+
+    private WorkoutExerciseHistoryResponse toWorkoutExerciseHistoryResponse(WorkoutExercise workoutExercise) {
+        List<WorkoutSetHistoryResponse> sets = workoutSetRepository
+                .findByWorkoutExerciseIdOrderBySetNumberAsc(workoutExercise.getId())
+                .stream()
+                .map(workoutSet -> new WorkoutSetHistoryResponse(
+                        workoutSet.getSetNumber(),
+                        workoutSet.getWeightKg(),
+                        workoutSet.getReps()
                 ))
                 .toList();
 
+        return new WorkoutExerciseHistoryResponse(
+                workoutExercise.getExercise().getId(),
+                workoutExercise.getExercise().getName(),
+                workoutExercise.getPosition(),
+                sets
+        );
     }
 }
