@@ -1,5 +1,7 @@
 package com.vishnurajeev.lifttrack.exercise;
 
+import com.vishnurajeev.lifttrack.workout.ExerciseProgressResponse;
+import com.vishnurajeev.lifttrack.workout.ExerciseProgressService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +14,11 @@ import java.util.List;
 public class ExerciseController {
 
     private final ExerciseService exerciseService;
+    private final ExerciseProgressService exerciseProgressService;
 
-    public ExerciseController(ExerciseService exerciseService) {
+    public ExerciseController(ExerciseService exerciseService, ExerciseProgressService exerciseProgressService) {
         this.exerciseService = exerciseService;
+        this.exerciseProgressService = exerciseProgressService;
     }
 
     @PostMapping
@@ -31,5 +35,10 @@ public class ExerciseController {
     @GetMapping("/{id}")
     public Exercise getExerciseById(@PathVariable Long id) {
         return exerciseService.getExerciseById(id);
+    }
+
+    @GetMapping("/{exerciseId}/progress")
+    public ExerciseProgressResponse getExerciseProgress(@PathVariable Long exerciseId) {
+        return exerciseProgressService.getExerciseProgress(exerciseId);
     }
 }
