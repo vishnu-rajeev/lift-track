@@ -2,6 +2,7 @@ package com.vishnurajeev.lifttrack.common.exception;
 
 import com.vishnurajeev.lifttrack.exercise.DuplicateExerciseException;
 import com.vishnurajeev.lifttrack.exercise.ExerciseNotFoundException;
+import com.vishnurajeev.lifttrack.user.DuplicateEmailException;
 import com.vishnurajeev.lifttrack.workout.WorkoutExerciseNotFoundException;
 import com.vishnurajeev.lifttrack.workout.WorkoutSessionNotFoundException;
 import org.hibernate.jdbc.Work;
@@ -67,5 +68,13 @@ public class GlobalExceptionHandler {
         responseBody.put("status", HttpStatus.NOT_FOUND.value());
         responseBody.put("message", exception.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+    }
+
+    @ExceptionHandler(DuplicateEmailException.class)
+    public ResponseEntity<Map<String, Object>> handleDuplicateEmail(DuplicateEmailException exception) {
+        Map<String, Object> responseBody = new LinkedHashMap<>();
+        responseBody.put("status", HttpStatus.CONFLICT.value());
+        responseBody.put("message", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(responseBody);
     }
 }

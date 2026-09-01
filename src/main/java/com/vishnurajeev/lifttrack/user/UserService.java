@@ -19,7 +19,7 @@ public class UserService {
     public User register(RegisterRequest request) {
 
         if(userRepository.findByEmail(request.email()).isPresent()) {
-            throw new IllegalArgumentException("Email already registered");
+            throw new DuplicateEmailException(request.email());
         }
 
         String passwordHash = passwordEncoder.encode(request.password());
@@ -27,5 +27,20 @@ public class UserService {
         User user = new User(request.email(), passwordHash);
 
         return userRepository.save(user);
+    }
+
+    @Transactional(readOnly = true)
+    public User authenticate(LoginRequest request) {
+
+        User user = userRepository.findByEmail(request.email())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+
+        boolean passwordMatches = passwordEncoder.matches(request.password(), user.getPasswordHash());
+
+        if (!passwordMatches) {
+            throw new IllegalArgumentException("Invalid email or password");
+        }
+
+        return user;
     }
 }
