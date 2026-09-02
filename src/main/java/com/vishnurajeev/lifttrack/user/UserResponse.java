@@ -2,7 +2,7 @@ package com.vishnurajeev.lifttrack.user;
 
 import java.time.Instant;
 
-public record RegisterResponse(
+public record UserResponse(
         Long id,
         String email,
         Instant createdAt

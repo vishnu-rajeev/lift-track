@@ -16,9 +16,16 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public RegisterResponse register(@Valid @RequestBody RegisterRequest request) {
+    public UserResponse register(@Valid @RequestBody RegisterRequest request) {
 
         User user = userService.register(request);
-        return new RegisterResponse(user.getId(), user.getEmail(), user.getCreatedAt());
+        return new UserResponse(user.getId(), user.getEmail(), user.getCreatedAt());
+    }
+
+    @PostMapping("/login")
+    public UserResponse login(@Valid @RequestBody LoginRequest request) {
+
+        User user = userService.authenticate(request);
+        return new UserResponse(user.getId(), user.getEmail(), user.getCreatedAt());
     }
 }

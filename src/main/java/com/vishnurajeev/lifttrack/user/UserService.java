@@ -33,12 +33,12 @@ public class UserService {
     public User authenticate(LoginRequest request) {
 
         User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+                .orElseThrow(InvalidCredentialsException::new);
 
         boolean passwordMatches = passwordEncoder.matches(request.password(), user.getPasswordHash());
 
         if (!passwordMatches) {
-            throw new IllegalArgumentException("Invalid email or password");
+            throw new InvalidCredentialsException();
         }
 
         return user;
