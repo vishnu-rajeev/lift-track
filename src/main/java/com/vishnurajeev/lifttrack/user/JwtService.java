@@ -1,5 +1,7 @@
 package com.vishnurajeev.lifttrack.user;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -9,7 +11,6 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import java.sql.Date;
 import java.time.Instant;
-import java.util.Base64;
 
 @Service
 public class JwtService {
@@ -30,5 +31,24 @@ public class JwtService {
                 .expiration(Date.from(expiration))
                 .signWith(signingKey)
                 .compact();
+    }
+
+    public Long extractUserId(String token) {
+        Claims claims = Jwts.parser()
+                .verifyWith(signingKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        return Long.valueOf(claims.getSubject());
+    }
+
+    public boolean isTokenValid(String token) {
+        try {
+            extractUserId(token);
+            return true;
+        } catch (JwtException | NumberFormatException e) {
+            return false;
+        }
     }
 }
